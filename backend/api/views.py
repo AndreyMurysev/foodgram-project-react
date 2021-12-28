@@ -60,8 +60,8 @@ class CustomUserViewSet(views.UserViewSet):
         }
         serializer = FollowSerializer(
             data=data, context={'request': request})
-        if (request.method == 'GET' and
-                serializer.is_valid(raise_exception=True)):
+        if request.method == 'GET' and serializer.is_valid(
+                raise_exception=True):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         serializer.is_valid(raise_exception=True)
@@ -104,9 +104,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
             )),
             is_in_shopping_cart=Exists(ShoppingCart.objects.filter(
                 user=user, recipe_id=OuterRef('pk')
-            ))
-        )
-
+            )))
         if self.request.GET.get('is_favorited'):
             return queryset.filter(is_favorited=True)
         elif self.request.GET.get('is_in_shopping_cart'):
@@ -130,8 +128,8 @@ class RecipeViewSet(viewsets.ModelViewSet):
         serializer = FavoriteRecipeSerializer(
             data=data, context={'request': request}
         )
-        if (request.method == 'GET' and
-                serializer.is_valid(raise_exception=True)):
+        if request.method == 'GET' and serializer.is_valid(
+                raise_exception=True):
             serializer.save()
             return Response(
                 serializer.data,
@@ -157,8 +155,8 @@ class RecipeViewSet(viewsets.ModelViewSet):
         serializer = ShoppingCartSerializer(
             data=data, context={'request': request}
         )
-        if (request.method == 'GET' and
-                serializer.is_valid(raise_exception=True)):
+        if request.method == 'GET' and serializer.is_valid(
+                raise_exception=True):
             serializer.save()
             return Response(
                 serializer.data,
@@ -187,11 +185,9 @@ class RecipeViewSet(viewsets.ModelViewSet):
                 if name not in dict:
                     dict[name] = {
                         'measurement_unit': measurement_unit,
-                        'amount': amount
-                    }
+                        'amount': amount}
                 else:
-                    dict[name]['amount'] = (
-                            dict[name]['amount'] + amount)
+                    dict[name]['amount'] = (dict[name]['amount'] + amount)
         list = []
         i = 0
         for key in dict:
@@ -199,6 +195,6 @@ class RecipeViewSet(viewsets.ModelViewSet):
             list.append(f'{i}. {key} - {dict[key]["amount"]} - '
                         f'{dict[key]["measurement_unit"]} \n')
         response = HttpResponse(list, 'Content-Type: text/plain')
-        response['Content-Disposition'] = \
-            'attachment; filename="shop_list.txt"'
+        response['Content-Disposition'] = ('attachment;',
+                                           ' filename="shop_list.txt"')
         return response

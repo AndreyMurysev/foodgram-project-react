@@ -57,17 +57,17 @@ class IngredientsSerializer(serializers.ModelSerializer):
 class Hex2NameColor(serializers.Field):
     def to_representation(self, value):
         try:
-            value = webcolors.name_to_hex(value)
+            webcolors.name_to_hex(value)
         except ValueError:
             raise serializers.ValidationError('Для этого имени нет цвета')
-        return value
+        return webcolors.name_to_hex(value)
 
     def to_internal_value(self, data):
         try:
-            data = webcolors.hex_to_name(data)
+            webcolors.hex_to_name(data)
         except ValueError:
             raise serializers.ValidationError('Для этого имени нет цвета')
-        return data
+        return webcolors.hex_to_name(data)
 
 
 class TagSerializer(serializers.ModelSerializer):
@@ -196,10 +196,8 @@ class FavoriteRecipeSerializer(serializers.ModelSerializer):
     def validate(self, data):
         request = self.context.get('request')
         recipe_id = data['recipe'].id
-        favorite = Favorite.objects.filter(
-                    user=request.user,
-                    recipe__id=recipe_id
-                ).exists()
+        favorite = Favorite.objects.filter(user=request.user,
+                                           recipe__id=recipe_id).exists()
         if request.method == 'GET':
             if request.user.is_anonymous:
                 raise serializers.ValidationError(
@@ -258,10 +256,8 @@ class FollowSerializer(serializers.ModelSerializer):
     def validate(self, data):
         request = self.context.get('request')
         author_id = data['author'].id
-        follow = Follow.objects.filter(
-                    user=request.user,
-                    author__id=author_id
-                ).exists()
+        follow = Follow.objects.filter(user=request.user,
+                                       author__id=author_id).exists()
         if request.method == 'GET':
             if request.user.id == author_id:
                 raise serializers.ValidationError(
