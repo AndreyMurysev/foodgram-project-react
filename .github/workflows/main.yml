@@ -58,7 +58,7 @@ jobs:
         username: ${{ secrets.USER }}
         key: ${{ secrets.SSH_KEY }}
         script: |
-          sudo docker pull andreymurysev/yamdb-compose
+          sudo docker pull andreymurysev/mysite_fod
           sudo docker-compose stop
           sudo docker-compose rm web
           touch .env
