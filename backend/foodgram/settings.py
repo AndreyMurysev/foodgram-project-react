@@ -11,9 +11,9 @@ environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
 SECRET_KEY = env('SECRET_KEY', default='1234')
 
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['51.250.28.118']
+ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default='["*"]')
 
 
 INSTALLED_APPS = [
@@ -62,7 +62,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'foodgram.wsgi.applcation'
+WSGI_APPLICATION = 'foodgram.wsgi.application'
 
 DATABASES = {
     'default': {

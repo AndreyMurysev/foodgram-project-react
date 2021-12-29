@@ -1,3 +1,12 @@
+import io
+from django.http import FileResponse
+from reportlab.pdfgen import canvas
+from django.conf import settings
+
+from reportlab.pdfbase import pdfmetrics
+from reportlab.pdfbase.ttfonts import TTFont
+from reportlab import rl_config
+
 from rest_framework import (status)
 from rest_framework.response import Response
 from rest_framework import viewsets
@@ -5,7 +14,6 @@ from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny, IsAuthenticated
 
 from django.shortcuts import get_object_or_404
-from django.http.response import HttpResponse
 from django.db.models import Exists, OuterRef
 from django_filters.rest_framework import DjangoFilterBackend
 
@@ -28,6 +36,8 @@ from .serializers import (FavoriteRecipeSerializer,
                           TagSerializer,
                           UserSerializer,
                           RecipeSerializer)
+
+rl_config.TTFSearchPath.append(str(settings.BASE_DIR) + '/lib/reportlabs/fonts/')
 
 
 class CustomUserViewSet(views.UserViewSet):
@@ -94,17 +104,13 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         user = self.request.user
-
         if user.is_anonymous:
             return Recipe.objects.all()
-
         queryset = Recipe.objects.annotate(
             is_favorited=Exists(Favorite.objects.filter(
-                user=user, recipe_id=OuterRef('pk')
-            )),
+                user=user, recipe_id=OuterRef('pk'))),
             is_in_shopping_cart=Exists(ShoppingCart.objects.filter(
-                user=user, recipe_id=OuterRef('pk')
-            )))
+                user=user, recipe_id=OuterRef('pk'))))
         if self.request.GET.get('is_favorited'):
             return queryset.filter(is_favorited=True)
         elif self.request.GET.get('is_in_shopping_cart'):
@@ -123,18 +129,15 @@ class RecipeViewSet(viewsets.ModelViewSet):
         recipe = get_object_or_404(Recipe, pk=pk)
         data = {
             'user': user.id,
-            'recipe': recipe.id,
-        }
+            'recipe': recipe.id,}
         serializer = FavoriteRecipeSerializer(
-            data=data, context={'request': request}
-        )
+            data=data, context={'request': request})
         if request.method == 'GET' and serializer.is_valid(
                 raise_exception=True):
             serializer.save()
             return Response(
                 serializer.data,
-                status=status.HTTP_201_CREATED
-            )
+                status=status.HTTP_201_CREATED)
         serializer.is_valid(raise_exception=True)
         favorite = get_object_or_404(Favorite,
                                      user=user,
@@ -150,18 +153,15 @@ class RecipeViewSet(viewsets.ModelViewSet):
         recipe = get_object_or_404(Recipe, pk=pk)
         data = {
             'user': user.id,
-            'recipe': recipe.id,
-        }
+            'recipe': recipe.id,}
         serializer = ShoppingCartSerializer(
-            data=data, context={'request': request}
-        )
+            data=data, context={'request': request})
         if request.method == 'GET' and serializer.is_valid(
                 raise_exception=True):
             serializer.save()
             return Response(
                 serializer.data,
-                status=status.HTTP_201_CREATED
-            )
+                status=status.HTTP_201_CREATED)
         serializer.is_valid(raise_exception=True)
         favorite = get_object_or_404(ShoppingCart,
                                      user=user,
@@ -193,8 +193,16 @@ class RecipeViewSet(viewsets.ModelViewSet):
         for key in dict:
             i += 1
             list.append(f'{i}. {key} - {dict[key]["amount"]} - '
-                        f'{dict[key]["measurement_unit"]} \n')
-        response = HttpResponse(list, 'Content-Type: text/plain')
-        response['Content-Disposition'] = ('attachment;',
-                                           ' filename="shop_list.txt"')
-        return response
+                        f'{dict[key]["measurement_unit"]}')
+        buffer = io.BytesIO()
+        pdfmetrics.registerFont(TTFont('TNRB', 'timesbd.ttf'))
+        p = canvas.Canvas(buffer)
+        p.setFont('TNRB', 16)
+        x=0
+        for int in range(len(list)):
+            x = x+20
+            p.drawString(20, 727-x, list[int])
+        p.showPage()
+        p.save()
+        buffer.seek(0)
+        return FileResponse(buffer, as_attachment=True, filename='canvas.pdf')
