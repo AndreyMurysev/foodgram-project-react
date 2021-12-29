@@ -116,8 +116,7 @@ docker-compose exec web python manage.py loaddata dump.json
 Команда разработчиков:
  - https://github.com/AndreyMurysev
 
-[![Django-app workflow](https://github.com/AndreyMurysev/yamdb_final/actions/workflows/yamdb_workflow.yml/badge.svg)]
-(https://github.com/AndreyMurysev/yamdb_final/actions/workflows/yamdb_workflow.yml)
+[![Django-app workflow](https://github.com/AndreyMurysev/foodgram-project-react/actions/workflows/main.yml/badge.svg)]
 
 Авторское право (c) 2021 AAA
 
