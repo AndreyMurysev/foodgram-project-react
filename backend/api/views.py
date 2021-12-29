@@ -37,7 +37,8 @@ from .serializers import (FavoriteRecipeSerializer,
                           UserSerializer,
                           RecipeSerializer)
 
-rl_config.TTFSearchPath.append(str(settings.BASE_DIR) + '/lib/reportlabs/fonts/')
+rl_config.TTFSearchPath.append(
+    str(settings.BASE_DIR) + '/lib/reportlabs/fonts/')
 
 
 class CustomUserViewSet(views.UserViewSet):
@@ -129,7 +130,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
         recipe = get_object_or_404(Recipe, pk=pk)
         data = {
             'user': user.id,
-            'recipe': recipe.id,}
+            'recipe': recipe.id}
         serializer = FavoriteRecipeSerializer(
             data=data, context={'request': request})
         if request.method == 'GET' and serializer.is_valid(
@@ -153,7 +154,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
         recipe = get_object_or_404(Recipe, pk=pk)
         data = {
             'user': user.id,
-            'recipe': recipe.id,}
+            'recipe': recipe.id}
         serializer = ShoppingCartSerializer(
             data=data, context={'request': request})
         if request.method == 'GET' and serializer.is_valid(
@@ -198,10 +199,10 @@ class RecipeViewSet(viewsets.ModelViewSet):
         pdfmetrics.registerFont(TTFont('TNRB', 'timesbd.ttf'))
         p = canvas.Canvas(buffer)
         p.setFont('TNRB', 16)
-        x=0
+        x = 0
         for int in range(len(list)):
-            x = x+20
-            p.drawString(20, 727-x, list[int])
+            x = x + 20
+            p.drawString(20, 727 - x, list[int])
         p.showPage()
         p.save()
         buffer.seek(0)
