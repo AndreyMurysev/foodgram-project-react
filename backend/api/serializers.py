@@ -1,18 +1,11 @@
 import webcolors
-
+from django.shortcuts import get_object_or_404
 from djoser.serializers import UserCreateSerializer
 from drf_extra_fields.fields import Base64ImageField
-from django.shortcuts import get_object_or_404
-
+from recipies.models import (Favorite, Ingredient, Recipe, RecipeIngredients,
+                             ShoppingCart, Tag)
 from rest_framework import serializers
-
-from users.models import User, Follow
-from recipies.models import (Favorite,
-                             Ingredient,
-                             Recipe,
-                             RecipeIngredients,
-                             ShoppingCart,
-                             Tag,)
+from users.models import Follow, User
 
 
 class UserSerializer(serializers.ModelSerializer):

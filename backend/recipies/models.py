@@ -2,16 +2,47 @@ from django.db import models
 from users.models import User
 
 COLOR = [
-    ('yellow', 'yellow'),
-    ('green', 'green'),
-    ('blue', 'blue'),
-    ('brown', 'brown'),
-    ('white', 'white'),
-    ('red', 'red'),
-    ('orange', 'orange'),
-    ('pink', 'pink'),
-    ('gray ', 'gray'),
-    ('black ', 'black')]
+    ('yellow', 'желтый'),
+    ('green', 'зеленый'),
+    ('blue', 'синий'),
+    ('brown', 'коричневый'),
+    ('white', 'белый'),
+    ('red', 'красный'),
+    ('orange', 'оранжевый'),
+    ('pink', 'розовый'),
+    ('gray ', 'серый'),
+    ('black ', 'черный')]
+
+MESURMENT_UNIT = [
+    ('г', 'г'),
+    ('стакан', 'стакан'),
+    ('по вкусу', 'по вкусу'),
+    ('ст. л.', 'ст. л.'),
+    ('шт.', 'шт.'),
+    ('мл', 'мл'),
+    ('ч. л.', 'ч. л.'),
+    ('капля', 'капля'),
+    ('звездочка', 'звездочка'),
+    ('щепотка', 'щепотка'),
+    ('горсть', 'горсть'),
+    ('кусок', 'кусок'),
+    ('кг', 'кг'),
+    ('пакет', 'пакет'),
+    ('пучок', 'пучок'),
+    ('долька', 'долька'),
+    ('банка', 'банка'),
+    ('упаковка', 'упаковка'),
+    ('зубчик', 'зубчик'),
+    ('пласт', 'пласт'),
+    ('пачка', 'пачка'),
+    ('тушка', 'тушка'),
+    ('стручок', 'стручок'),
+    ('веточка', 'веточка'),
+    ('бутылка', 'бутылка'),
+    ('л', 'л'),
+    ('пакетик', 'пакетик'),
+    ('лист', 'лист'),
+    ('стебель', 'стебель')]
 
 
 class Tag(models.Model):
@@ -48,6 +79,7 @@ class Ingredient(models.Model):
         blank=False)
     measurement_unit = models.CharField(
         max_length=15,
+        choices=MESURMENT_UNIT,
         verbose_name='Единица измерения',
         blank=False)
 
@@ -63,7 +95,7 @@ class Ingredient(models.Model):
 class Recipe(models.Model):
     name = models.CharField('Наименование', max_length=200)
     text = models.TextField('Текст')
-    cooking_time = models.IntegerField('Время приготовления')
+    cooking_time = models.PositiveSmallIntegerField('Время приготовления')
     image = models.ImageField(
         verbose_name='Изображение',
         upload_to='recipes/')
@@ -71,13 +103,11 @@ class Recipe(models.Model):
         User,
         on_delete=models.CASCADE,
         related_name='recipe',
-        verbose_name='Автор',
-    )
+        verbose_name='Автор',)
     ingredients = models.ManyToManyField(
         Ingredient,
         through='RecipeIngredients',
-        verbose_name='Ингредиенты',
-    )
+        verbose_name='Ингредиенты',)
     tags = models.ManyToManyField(
         Tag,
         verbose_name='Тег',
@@ -87,6 +117,10 @@ class Recipe(models.Model):
         verbose_name = 'Рецепт'
         verbose_name_plural = 'Рецепты'
         ordering = ('-id',)
+        constraints = (
+            models.CheckConstraint(
+                check=models.Q(cooking_time__gte=0),
+                name='time_gte_0'),)
 
     def __str__(self):
         return f'{self.name}'
@@ -103,7 +137,17 @@ class RecipeIngredients(models.Model):
         on_delete=models.CASCADE,
         related_name='ingredient_recipe',
         verbose_name='Ингредиент',)
-    amount = models.IntegerField('Количество')
+    amount = models.PositiveIntegerField('Количество')
+
+    class Meta:
+        ordering = ('-id',)
+        constraints = (
+            models.UniqueConstraint(
+                fields=('recipe', 'ingredient',),
+                name='unique_ingred_recipe'),
+            models.CheckConstraint(
+                check=models.Q(amount__gte=0),
+                name='amount_gte_0'),)
 
     def __str__(self):
         return f'{self.ingredient}'
@@ -121,17 +165,17 @@ class Favorite(models.Model):
         related_name='favorite_recipe',
         verbose_name='Рецепт',)
 
-    def __str__(self):
-        return f'{self.user}'
-
     class Meta:
         verbose_name = 'Избранный'
         verbose_name_plural = 'Избранное'
         ordering = ('-id',)
-        constraints = [
+        constraints = (
             models.UniqueConstraint(
-                fields=['user', 'recipe'],
-                name='unique_favorite')]
+                fields=('user', 'recipe',),
+                name='unique_favorite'),)
+
+    def __str__(self):
+        return f'{self.user}'
 
 
 class ShoppingCart(models.Model):
@@ -146,15 +190,14 @@ class ShoppingCart(models.Model):
         related_name='shopping_recipe',
         verbose_name='Рецепт',)
 
-    def __str__(self):
-        return f'{self.recipe}'
-
     class Meta:
         verbose_name = 'Список покупок'
         verbose_name_plural = 'Списки покупок'
         ordering = ('-id',)
-        constraints = [
+        constraints = (
             models.UniqueConstraint(
-                fields=['user', 'recipe'], name='unique_shop'
-            )
-        ]
+                fields=('user', 'recipe',),
+                name='unique_shop'),)
+
+    def __str__(self):
+        return f'{self.recipe}'

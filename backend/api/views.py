@@ -1,42 +1,29 @@
 import io
 
-from django.http import FileResponse
-from reportlab.pdfgen import canvas
 from django.conf import settings
-
+from django.db.models import Exists, OuterRef
+from django.http import FileResponse
+from django.shortcuts import get_object_or_404
+from django_filters.rest_framework import DjangoFilterBackend
+from djoser import views
+from recipies.models import Favorite, Ingredient, Recipe, ShoppingCart, Tag
+from reportlab import rl_config
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
-from reportlab import rl_config
-
-from rest_framework import (status)
-from rest_framework.response import Response
-from rest_framework import viewsets
+from reportlab.pdfgen import canvas
+from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny, IsAuthenticated
-
-from django.shortcuts import get_object_or_404
-from django.db.models import Exists, OuterRef
-from django_filters.rest_framework import DjangoFilterBackend
-
-from djoser import views
-
+from rest_framework.response import Response
 from users.models import Follow, User
-from recipies.models import (Favorite,
-                             Ingredient,
-                             ShoppingCart,
-                             Tag,
-                             Recipe)
 
 from .filters import RecipeFilter
-from .permissions import EditAuthorAndAdminOrReadAll
 from .paginations import CustomPagination
-from .serializers import (FavoriteRecipeSerializer,
-                          FollowSerializer,
-                          IngredientsSerializer,
-                          ShoppingCartSerializer,
-                          TagSerializer,
-                          UserSerializer,
-                          RecipeSerializer)
+from .permissions import EditAuthorAndAdminOrReadAll
+from .serializers import (FavoriteRecipeSerializer, FollowSerializer,
+                          IngredientsSerializer, RecipeSerializer,
+                          ShoppingCartSerializer, TagSerializer,
+                          UserSerializer)
 
 rl_config.TTFSearchPath.append(
     str(settings.BASE_DIR) + '/lib/reportlabs/fonts/')
