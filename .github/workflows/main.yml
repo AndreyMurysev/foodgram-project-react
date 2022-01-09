@@ -22,7 +22,7 @@ jobs:
 
     - name: Test with flake8 and django tests
       run: |
-        python -m flake8
+        python -m flake8 #1
 
 
 
@@ -71,4 +71,4 @@ jobs:
           echo DB_PORT="${{ secrets.DB_PORT }}" >> .env
           echo SECRET_KEY="${{ secrets.SECRET_KEY }}" >> .env
           echo ALLOWED_HOSTS="${{ secrets.ALLOWED_HOSTS }}" >> .env
-          sudo docker-compose up -d 
+          sudo docker-compose up -d
