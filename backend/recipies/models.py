@@ -119,8 +119,8 @@ class Recipe(models.Model):
         ordering = ('-id',)
         constraints = (
             models.CheckConstraint(
-                check=models.Q(cooking_time__gte=0),
-                name='time_gte_0'),)
+                check=models.Q(cooking_time__gte=1),
+                name='time_gte_1'),)
 
     def __str__(self):
         return f'{self.name}'
@@ -146,8 +146,8 @@ class RecipeIngredients(models.Model):
                 fields=('recipe', 'ingredient',),
                 name='unique_ingred_recipe'),
             models.CheckConstraint(
-                check=models.Q(amount__gte=0),
-                name='amount_gte_0'),)
+                check=models.Q(amount__gte=1),
+                name='amount_gte_1'),)
 
     def __str__(self):
         return f'{self.ingredient}'
