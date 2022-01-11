@@ -90,6 +90,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
     pagination_class = CustomPagination
     filter_backends = [DjangoFilterBackend]
     filter_class = RecipeFilter
+    ordering_fields = ('date_pub')
 
     def get_queryset(self):
         user = self.request.user
