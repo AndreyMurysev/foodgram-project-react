@@ -1,7 +1,7 @@
 ### Учетные данные администратора:
 
-email: admin@mail.ru 
-password: admin
+### email: admin@mail.ru 
+### password: admin
 
 ### Описание:
 Проект корректно запускается по адресу: 
