@@ -9,9 +9,7 @@ COLOR = [
     ('white', 'белый'),
     ('red', 'красный'),
     ('orange', 'оранжевый'),
-    ('pink', 'розовый'),
-    ('gray ', 'серый'),
-    ('black ', 'черный')]
+    ('pink', 'розовый')]
 
 MESURMENT_UNIT = [
     ('г', 'г'),
@@ -112,11 +110,14 @@ class Recipe(models.Model):
         Tag,
         verbose_name='Тег',
         related_name='tag_recipes',)
+    date_pub = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name='Дата публикации',)
 
     class Meta:
         verbose_name = 'Рецепт'
         verbose_name_plural = 'Рецепты'
-        ordering = ('-id',)
+        ordering = ('-date_pub',)
         constraints = (
             models.CheckConstraint(
                 check=models.Q(cooking_time__gte=1),
