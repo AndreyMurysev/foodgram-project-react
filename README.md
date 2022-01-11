@@ -1,8 +1,8 @@
 ### Учетные данные администратора:
 
-email: admin@mail.ru 
-password: admin
-IP: 51.250.28.118
+email: admin@mail.ru  
+password: admin  
+IP: 51.250.28.118  
 
 ### Описание:
 Проект корректно запускается по адресу: 
