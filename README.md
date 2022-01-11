@@ -1,12 +1,13 @@
 ### Учетные данные администратора:
 
-*** email: admin@mail.ru 
-*** password: admin
+email: admin@mail.ru 
+password: admin
+IP: 51.250.28.118
 
 ### Описание:
 Проект корректно запускается по адресу: 
-### 51.250.28.118/admin/
-### 51.250.28.118/api/docs/
+51.250.28.118/admin/
+51.250.28.118/api/docs/
 В redoc указано все для работы с API.
 
 Cайт, на котором пользователи будут публиковать рецепты, добавлять чужие рецепты в избранное и подписываться на публикации других авторов. 
@@ -95,7 +96,7 @@ docker-compose exec web python manage.py createsuperuser
 ```
 docker-compose exec web python manage.py collectstatic --no-input 
 ```
-Проект доступен по адрессу:
+Проект доступен по адресу:
 ```
 http://127.0.0.1/
 ```
