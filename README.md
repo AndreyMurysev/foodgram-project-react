@@ -59,32 +59,17 @@ password: admin
 
 
 ## Администратор и админ-зона
-:one: Все модели выведены в админ-зону.
-:two: Для модели пользователей включена фильтрация по имени и email.
-:three: Для модели рецептов включена фильтрация по названию, автору и тегам.
-:four: На админ-странице рецепта отображается общее число добавлений этого рецепта в избранное.
-:five: Для модели ингредиентов включена фильтрация по названию.
+:one: Все модели выведены в админ-зону.  
+:two: Для модели пользователей включена фильтрация по имени и email.  
+:three: Для модели рецептов включена фильтрация по названию, автору и тегам.  
+:four: На админ-странице рецепта отображается общее число добавлений этого рецепта в избранное.  
+:five: Для модели ингредиентов включена фильтрация по названию.  
 
 ## Создание пользователя администратором
 Пользователя может создать администратор — через админ-зону сайта или через POST-запрос на специальный эндпоинт api/users/ (описание полей 
 запроса для этого случая — в документации).  Далее пользователь отправляет POST-запрос с параметрами email и password на эндпоинт /api/auth/token/, 
 в ответе на запрос ему приходит token, как и при самостоятельной регистрации.
 
-## Шаблон наполнения env-файла
-
-```
-EMAIL_HOST_USER=mail@mail.ru
-EMAIL_HOST_PASSWORD=gsdlfghl
-SECRET_KEY=p&l%385148kl9(vs
-DB_ENGINE=django.db.backends.postgresql
-DB_NAME=postgres
-POSTGRES_USER=postgres
-POSTGRES_PASSWORD=postgres
-DB_HOST=db
-DB_PORT=5432
-ALLOWED_HOSTS='*'
-
-```
 ## Запуск проекта
 
 - Клонировать репозиторий GitHub (не забываем создать виртуальное окружение и установить зависимости):
@@ -113,12 +98,11 @@ docker build -t foodgram .
 ```
 docker-compose up -d
 ```
-В результате должны быть собрано три контейнер, при введении следующей команды:
+- В результате должны быть собрано три контейнер, при введении следующей команды получаем список запущенных контейнеров:  
 ```
 docker ps
-```
-получаем список запущенных контейнеров:
-_Пример:_
+```  
+_Пример:_  
 
 ```
 CONTAINER ID   IMAGE                             COMMAND                  CREATED       STATUS       PORTS                               NAMES
@@ -126,6 +110,7 @@ ffbe984f7533   nginx:1.19.3                      "/docker-entrypoint.…"   3 we
 5166bcfb1188   andreymurysev/mysite_fod:latest   "/bin/sh -c 'gunicor…"   3 weeks ago   Up 3 weeks                                       andrey_murysev_web_1
 a9c7a7542ddb   postgres:12.4                     "docker-entrypoint.s…"   3 weeks ago   Up 3 weeks   5432/tcp                            andrey_murysev_db_1
 ```
+Назначение контейнеров:  
 
 | IMAGES | NAMES | DESCRIPTIONS
 |:----------------:|:---------|:---------:|
@@ -146,7 +131,6 @@ docker-compose exec web python manage.py collectstatic --no-input
     ```
     docker-compose exec web python manage.py shell 
     ```
-    Выполнить в открывшемся терминале:
     ```
     >>> from django.contrib.contenttypes.models import ContentType
     >>> ContentType.objects.all().delete()
@@ -156,8 +140,8 @@ docker-compose exec web python manage.py collectstatic --no-input
     docker-compose exec web python manage.py loaddata dump.json
     ```
 ### Автор проекта:
-_Мурысев Андрей_
-**email:** _andreimurysev@yandex.ru_
-**telegram:** _@andrey_murysev_
+_Мурысев Андрей_  
+**email:** _andreimurysev@yandex.ru_  
+**telegram:** _@andrey_murysev_  
 
   
