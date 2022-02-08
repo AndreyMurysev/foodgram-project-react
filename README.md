@@ -10,6 +10,15 @@
 [![Yandex.Cloud](https://img.shields.io/badge/-Yandex.Cloud-464646?style=flat-square&logo=Yandex.Cloud)](https://cloud.yandex.ru/)
 [![Django-app workflow](https://github.com/AndreyMurysev/foodgram-project-react/actions/workflows/main.yml/badge.svg)]
 
+
+## Системные требования:
+Python 3.9.7  
+Django 2.2.19  
+Django REST framework  3.12.14  
+Djoser 2.1.0  
+Gunicorn 20.0.4  
+Nginx 1.19.3  
+
 ## Описание:
 
 Cайт, на котором пользователи будут публиковать рецепты, добавлять чужие рецепты в избранное и подписываться на публикации других авторов. 
